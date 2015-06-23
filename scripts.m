@@ -103,3 +103,100 @@ title('error (5% extreme values were dropped)');
 adjust_caxis(e,0.05);
 axis equal;
 colorbar;
+
+%% mask with boundary
+clear;
+[v,f,~] = read_off('data/mask.off');
+b = find_border(v,f);
+
+b_func = zeros(size(v,1),1);
+b_func(b) = 1;
+
+phi = dist_func_direct(v,f,b);
+
+figure;
+suptitle('mask');
+
+subplot(1,2,1);
+visualize_func(v,f,b_func,[]);
+title('border');
+axis equal;
+
+subplot(1,2,2);
+visualize_func(v,f,phi,[]);
+title('phi');
+axis equal;
+colorbar;
+
+%% hand with boundary
+clear;
+[v,f,~] = read_off('data/hand.off');
+b = find_border(v,f);
+
+b_func = zeros(size(v,1),1);
+b_func(b) = 1;
+
+phi = dist_func_direct(v,f,b);
+
+figure;
+suptitle('hand');
+
+subplot(1,2,1);
+visualize_func(v,f,b_func,[]);
+title('border');
+axis equal;
+
+subplot(1,2,2);
+visualize_func(v,f,phi,[]);
+title('phi');
+axis equal;
+colorbar;
+
+%% hand euclidean  vs geodesic distance
+[v,f,~] = read_off('data/hand.off');
+
+source = [11.45 104.5 28.81];
+gama = find_point(v,source);
+phi = dist_func_direct(v,f,gama);
+
+euc = norm_row(v - repmat(v(gama,:),size(v,1),1));
+
+figure;
+suptitle('Hand - euclidean  vs geodesic distance');
+
+subplot(1,2,1);
+visualize_func(v,f,euc,[]);
+title('euclidean distance');
+axis equal;
+colorbar;
+
+subplot(1,2,2);
+visualize_func(v,f,phi,[]);
+title('geodesic distance');
+axis equal;
+colorbar;
+
+%% fandisk
+clear;
+[v,f,~] = read_off('data/fandisk.off');
+[grad,div,L] = gen_diff_ops(v,f);
+
+
+source = [0.7559,0.4337,-0.6774];
+gama = find_point(v,source);
+[phi,u,~] = dist_func_direct(v,f,gama);
+
+figure;
+title('fandisk - phi');
+visualize_func(v,f,phi,[]);
+axis equal
+colorbar;
+
+figure;
+title('fandisk - grad(phi)');
+% visualize_func(v,f,phi,[]);
+visualize_mesh(v,f);
+visualize_v_field(v,f,grad * phi);
+axis equal;
+
+
