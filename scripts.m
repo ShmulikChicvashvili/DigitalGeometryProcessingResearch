@@ -153,6 +153,7 @@ axis equal;
 colorbar;
 
 %% hand euclidean  vs geodesic distance
+clear;
 [v,f,~] = read_off('data/hand.off');
 
 source = [11.45 104.5 28.81];
